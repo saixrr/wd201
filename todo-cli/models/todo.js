@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // models/todo.js
 "use strict";
 const { Op } = require("sequelize");
@@ -16,24 +17,26 @@ module.exports = (sequelize, DataTypes) => {
       console.log("My Todo list \n");
 
       console.log("Overdue");
-      const overdueItems = await this.overdue();
-      const overdueList = overdueItems.map((todo) => todo.displayableString());
-      console.log(overdueList.join("\n").trim());
-
+      const OverdueList = await Todo.overdue();
+      const overdueitems = OverdueList.map((todo) => todo.displayableString());
+      console.log(overdueitems.join("\n").trim());
       console.log("\n");
 
       console.log("Due Today");
-      const todayList = await this.dueToday();
-      const todayItems = todayList.map((todo) => todo.displayableString());
-      console.log(todayItems.join("\n").trim());
+      const duetodaylist = await Todo.dueToday();
+      const duetodayitems = duetodaylist.map((todo) =>
+        todo.displayableString()
+      );
+      console.log(duetodayitems.join("\n").trim());
+
       console.log("\n");
 
       console.log("Due Later");
-      const dueLaterList = await this.dueLater();
-      const dueLaterItems = dueLaterList.map((todo) =>
+      const duelaterlist = await Todo.overdue();
+      const duelateritems = duelaterlist.map((todo) =>
         todo.displayableString()
       );
-      console.log(dueLaterItems.join("\n").trim());
+      console.log(duelateritems.join("\n").trim());
     }
 
     static async overdue() {
@@ -70,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async markAsComplete(id) {
-      await Todo.update(
+      return await Todo.update(
         { completed: true },
         {
           where: {
