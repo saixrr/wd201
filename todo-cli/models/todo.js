@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // models/todo.js
 "use strict";
 const { Op } = require("sequelize");
@@ -17,26 +16,24 @@ module.exports = (sequelize, DataTypes) => {
       console.log("My Todo list \n");
 
       console.log("Overdue");
-      const OverdueList = await Todo.overdue();
-      const overdueitems = OverdueList.map((todo) => todo.displayableString());
-      console.log(overdueitems.join("\n").trim());
+      const overdueItems = await this.overdue();
+      const overdueList = overdueItems.map((todo) => todo.displayableString());
+      console.log(overdueList.join("\n").trim());
+
       console.log("\n");
 
       console.log("Due Today");
-      const duetodaylist = await Todo.dueToday();
-      const duetodayitems = duetodaylist.map((todo) =>
-        todo.displayableString()
-      );
-      console.log(duetodayitems.join("\n").trim());
-
+      const todayList = await this.dueToday();
+      const todayItems = todayList.map((todo) => todo.displayableString());
+      console.log(todayItems.join("\n").trim());
       console.log("\n");
 
       console.log("Due Later");
-      const duelaterlist = await Todo.overdue();
-      const duelateritems = duelaterlist.map((todo) =>
+      const dueLaterList = await this.dueLater();
+      const dueLaterItems = dueLaterList.map((todo) =>
         todo.displayableString()
       );
-      console.log(duelateritems.join("\n").trim());
+      console.log(dueLaterItems.join("\n").trim());
     }
 
     static async overdue() {
@@ -73,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async markAsComplete(id) {
-      return await Todo.update(
+      await Todo.update(
         { completed: true },
         {
           where: {
@@ -85,7 +82,10 @@ module.exports = (sequelize, DataTypes) => {
 
     displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
+      const day = new Date(this.dueDate);
+      return day.getDate() === new Date().getDate()
+        ? `${this.id}. ${checkbox} ${this.title}`.trim()
+        : `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`.trim();
     }
   }
   Todo.init(
