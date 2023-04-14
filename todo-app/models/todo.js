@@ -10,48 +10,21 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    static getalltodos(){
+      return this.findAll()
+    }
+    deletetodo(){
+      return this.destroy()
+    }
+
+
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
+
     markAsCompleted() {
       return this.update({ completed: true });
-    }
-    static deletetodo(){
-      return this.destroy();
-
-    static getTodos() {
-      return this.findAll();
-    }
-
-    static getOverdueTodos() {
-      const { Op } = require("sequelize");
-      return this.findAll({
-        where: {
-          dueDate: {
-            [Op.lt]: new Date().toISOString().slice(0, 10),
-          },
-        },
-      });
-    }
-    static getDueTodayTodos() {
-      const { Op } = require("sequelize");
-      return this.findAll({
-        where: {
-          dueDate: {
-            [Op.eq]: new Date().toISOString().slice(0, 10),
-          },
-        },
-      });
-    }
-    static getDueLaterTodos() {
-      const { Op } = require("sequelize");
-      return this.findAll({
-        where: {
-          dueDate: {
-            [Op.gt]: new Date().toISOString().slice(0, 10),
-          },
-        },
-      });
     }
   }
   Todo.init(
