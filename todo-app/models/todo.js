@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     markAsCompleted() {
       return this.update({ completed: true });
     }
+    static deletetodo(){
+      return this.destroy();
 
     static getTodos() {
       return this.findAll();
