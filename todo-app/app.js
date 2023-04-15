@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
@@ -10,14 +11,14 @@ app.get("/", function (request, response) {
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
-  try {
-    const todoslist = await Todo.findAll();
-    return response.json(todoslist);
-} catch (error) {
+  try{
+    const todo = await Todo.findAll();
+    return response.send(todo);
+  }
+  catch(error){
     console.log(error);
-    return response.status(422).json(error);
-}
-  
+    return response.status(422).json(error);   
+  }
 });
 
 app.get("/todos/:id", async function (request, response) {
@@ -31,6 +32,7 @@ app.get("/todos/:id", async function (request, response) {
 });
 
 app.post("/todos", async function (request, response) {
+  console.log(request.body)
   try {
     const todo = await Todo.addTodo(request.body);
     return response.json(todo);
@@ -54,14 +56,20 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
 app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
   try{
-    const todo = await Todo.findByPk(request.params.id)
-    const deletedtodo = await todo.deletetodo();
-    return response.json(deletedtodo);
-  }catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    const a=await Todo.destroy({    
+      where: {
+        id: request.params.id
+      }
+    });
+    response.send(a>0);
   }
-
+  catch(error){
+    console.log(error);
+    return response.status(422).json(error);   
+  }
 });
-
+app.get("/todos", async(request,response) =>{
+const todoItems= await Todo.gettodo();
+response.json(todoItems);
+})
 module.exports = app;
