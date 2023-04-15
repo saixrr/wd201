@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -11,17 +12,22 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static getalltodos(){
+    /*static getalltodos(){
       return this.findAll()
     }
     deletetodo(){
       return this.destroy()
-    }
+    }*/
 
 
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo(todo) {
+      return this.create({
+        title: todo.title,
+        dueDate: todo.dueDate,
+        completed: false
+      });
     }
+    
 
     markAsCompleted() {
       return this.update({ completed: true });
