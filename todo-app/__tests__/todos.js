@@ -80,6 +80,7 @@ describe("Todo Application", function () {
      const todoID = parsedResponse.id;
    
      const deleteResponse = await agent.delete(`/todos/${todoID}`);
+     expect(deleteResponse.statusCode).toBe(200);
      const parsedDeleteResponse = Boolean(deleteResponse.text);
      expect(parsedDeleteResponse).toBe(true);
      });
