@@ -4,9 +4,27 @@ const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+const path = require("path")
 
-app.get("/", function (request, response) {
-  response.send("Hello World");
+app.set("view engine ","ejs");
+
+app.get("/", async (request,response) =>{
+  const allTodos = await Todo.getTodos(); 
+  if ( request.accepts("html")){
+    response.render('index.ejs',{
+      allTodos
+    });
+  }else {
+    response.json({
+      allTodos
+    })
+  }
+});
+
+app.use(express.static(path.join(__dirname,'public')));
+
+/*app.get("/", function (request, response) {
+  console.log("Todo list ",request.body);
 });
 
 app.get("/todos", async function (_request, response) {
@@ -29,7 +47,7 @@ app.get("/todos/:id", async function (request, response) {
     console.log(error);
     return response.status(422).json(error);
   }
-});
+});*/
 
 app.post("/todos", async function (request, response) {
   console.log(request.body)
@@ -68,4 +86,8 @@ app.delete("/todos/:id", async function (request, response) {
     return response.status(422).json(error);   
   }
 });
+app.get("/todos", async(request,response) =>{
+const todoItems= await Todo.gettodo();
+response.json(todoItems);
+})
 module.exports = app;
