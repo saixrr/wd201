@@ -31,7 +31,12 @@
             </div>
         </form>
         <div>
-            <h5>Overdue (<%= allTodos.filter(todo => todo.dueDate < new Date().toISOString().split('T')[0]).length %>)</h5>
+            <h5>Overdue</h5>
+            <!-- <span
+            style="text-align: right"
+            id="count-due-today"
+            class="bg-gray-200 text-black font-semibold px-3 py-1 rounded font-medium mb-2 ml-2"
+            ><%= allTodos.filter(todo => todo.dueDate === new Date().toISOString().split('T')[0]).length %></span -->
             <ul class="list-none">
                 <% for (var i = 0; i < allTodos.length; i++) { %>
                     <% if (allTodos[i].dueDate < new Date().toISOString().split('T')[0]) { %>
@@ -49,7 +54,7 @@
                     <% } %>
                 <% } %>
             </ul>
-            <h5>Due Today (<%= allTodos.filter(todo => todo.dueDate === new Date().toISOString().split('T')[0]).length %>)</h5>
+            <h5>Due Today</h5>
             <ul class="list-none">
                 <% for (var i = 0; i < allTodos.length; i++) { %>
                     <% if (allTodos[i].dueDate === new Date().toISOString().split('T')[0]) { %>
@@ -68,7 +73,7 @@
                 <% } %>
             </ul>
             
-            <h5>Due Later (<%= allTodos.filter(todo => todo.dueDate > new Date().toISOString().split('T')[0]).length %>)</h5>
+            <h5>Due Later</h5>
             <ul class="list-none">
                 <% for (var i = 0; i < allTodos.length; i++) { %>
                     <% if (allTodos[i].dueDate > new Date().toISOString().split('T')[0]) { %>
