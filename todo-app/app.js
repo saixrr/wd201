@@ -21,11 +21,13 @@ app.get("/", async (request,response) =>{
   }
 });
 
+
+
 app.use(express.static(path.join(__dirname,'public')));
 
 /*app.get("/", function (request, response) {
   console.log("Todo list ",request.body);
-});
+});*/
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
@@ -39,7 +41,7 @@ app.get("/todos", async function (_request, response) {
   }
 });
 
-app.get("/todos/:id", async function (request, response) {
+/*app.get("/todos/:id", async function (request, response) {
   try {
     const todo = await Todo.findByPk(request.params.id);
     return response.json(todo);
@@ -86,8 +88,8 @@ app.delete("/todos/:id", async function (request, response) {
     return response.status(422).json(error);   
   }
 });
-app.get("/todos", async(request,response) =>{
-const todoItems= await Todo.gettodo();
-response.json(todoItems);
-})
+// app.get("/todos", async(request,response) =>{
+// const todoItems= await Todo.gettodo();
+// response.json(todoItems);
+// })
 module.exports = app;
