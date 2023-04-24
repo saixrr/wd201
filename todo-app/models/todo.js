@@ -18,7 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     /*deletetodo(){
       return this.destroy()
     }*/
-
+    markAsCompleted(){
+      return this.update({completed:true});
+    }
 
     static addTodo(todo) {
       return this.create({
@@ -39,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
     
-    static async duetoday() {
+    static async dueToday() {
       return this.findAll({
         where: {
           dueDate: {
@@ -50,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
 
-    static async duelater() {
+    static async dueLater() {
       return this.findAll({
         where: {
           dueDate: {
@@ -60,11 +62,26 @@ module.exports = (sequelize, DataTypes) => {
         },
       })
     }
-    
-    
 
-    markAsCompleted() {
-      return this.update({ completed: true });
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
+    static completed(){
+      return this.findAll({
+        where:{
+          completed:true,
+        },
+        order:[["id","ASC"]],
+      })
+    }
+
+    setCompletionStatus( bool) {
+      return this.update({completed: bool});
     }
   }
   Todo.init(
