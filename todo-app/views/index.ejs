@@ -12,28 +12,13 @@
           .querySelector('meta[name="csrf-token"]')
           .getAttribute("content");
         function updateTodo(id) {
+            const status = document.querySelector(`#checkbox-${id}`).checked
             fetch(`/todos/${id}`,{
                 method:"put",
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({
                     "_csrf":token,
-                    completed: true,
-                })
-            })
-              .then((res) =>{
-                if(res.ok){
-                    window.location.reload();
-                }
-            })
-            .catch((err) => console.error(err));
-        }
-         function updateTodo(id) {
-            fetch(`/todos/${id}`,{
-                method:"put",
-                headers: { "Content-Type": "application/json"},
-                body: JSON.stringify({
-                    "_csrf":token,
-                    completed: true,
+                    completed: status,
                 })
             })
               .then((res) =>{
