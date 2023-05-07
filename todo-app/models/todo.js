@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 "use strict";
 const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -8,80 +7,86 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    // eslint-disable-next-line no-unused-vars
     static associate(models) {
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
       // define association here
     }
 
-    static getTodos(){
-      return this.findAll()
-    }
-    /*deletetodo(){
-      return this.destroy()
-    }*/
-    markAsCompleted(){
-      return this.update({completed:true});
-    }
-
-    static addTodo(todo) {
+    static addTodo({ title, dueDate}) {
       return this.create({
-        title: todo.title,
-        dueDate: todo.dueDate,
-        completed: false
+        title: title,
+        dueDate: dueDate,
+        completed: false,
       });
     }
 
-    static async overdue() {
+    static getTodos() {
+      return this.findAll();
+    }
+
+    static overdue() {
       return this.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date(),
           },
-          completed:false,
+          completed: false,
         },
-      })
-    }
-    
-    static async dueToday() {
-      return this.findAll({
-        where: {
-          dueDate: {
-            [Op.eq]: new Date(),
-          },
-          completed:false,
-        },
-      })
+      });
     }
 
-    static async dueLater() {
+    static dueLater() {
       return this.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date(),
           },
-          completed:false,
-        },
-      })
-    }
-
-    static async remove(id) {
-      return this.destroy({
-        where: {
-          id,
+          completed: false,
         },
       });
     }
 
-    static completed(){
+    static dueToday() {
       return this.findAll({
-        where:{
-          completed:true,
+        where: {
+          dueDate: {
+            [Op.eq]: new Date(),
+          },
+          completed: false,
         },
-        order:[["id","ASC"]],
-      })
+      });
     }
 
-    setCompletionStatus( bool) {
-      return this.update({completed: bool});
+    static remove(id) {
+      return this.destroy({
+        where: {
+          id
+        },
+      });
+    }
+
+    static completed() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+      });
+    }
+    markAsCompleted() {
+      return this.update({ completed: true });
+    }
+    static setCompletionStatus(bool, id) {
+      return this.update(
+        { completed: bool },
+        {
+          where: {
+            id
+          },
+        }
+      );
     }
   }
   Todo.init(
