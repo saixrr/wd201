@@ -7,24 +7,24 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
     }
-    static addTodo({ title, dueDate, userId }) {
-      return this.create({
+    static addTodo({ title, dueDate,userId }) {
+      return this.create({  
         title: title,
         dueDate: dueDate,
         completed: false,
         userId,
       });
     }
-    static getTodo() {
+    static getTodos() {
       return this.findAll();
     }
 
     static overdue(userId) {
-      return this.findAll({
+      return Todo.findAll({
         where: {
           dueDate: { [Op.lt]: new Date() },
-          completed: false,
           userId,
+          completed: false,
         },
         order: [["dueDate", "ASC"]],
       });
@@ -35,14 +35,14 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           dueDate: { [Op.eq]: new Date() },
           completed: false,
-          userId,
+          userId
         },
         order: [["dueDate", "ASC"]],
       });
     }
 
     static completed(userId) {
-      return this.findAll({
+      return Todo.findAll({
         where: {
           completed: true,
           userId,
@@ -55,8 +55,8 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll({
         where: {
           dueDate: { [Op.gt]: new Date() },
-          completed: false,
           userId,
+          completed: false,
         },
         order: [["dueDate", "ASC"]],
       });
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async remove(id, userId) {
+    static async remove(id,userId) {
       return this.destroy({
         where: {
           id,
@@ -83,21 +83,34 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: true });
     }
 
-    setCompletionStatus(boolean) {
-      return this.update({ completed: boolean }),
-      {
-        where:  {
-          id,
-        }
-      }
+    setCompletionStatus(complete) {
+      const  status= complete === true ? false : true;
+      return this.update({ completed: status });
     }
+
   }
   Todo.init(
     {
-      title: DataTypes.STRING,
-      dueDate: DataTypes.DATEONLY,
-      completed: DataTypes.BOOLEAN,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notNull: true,
+            len: 5
+        }
+     },
+      dueDate:{
+      type: DataTypes.DATEONLY,
+      allowNull:false,
+      validate:{
+        isDate:true,
+      }
+      },
+      completed:{
+      type:  DataTypes.BOOLEAN,
+      defaultValue:false,
     },
+  },
     {
       sequelize,
       modelName: "Todo",
