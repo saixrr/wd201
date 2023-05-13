@@ -67,12 +67,17 @@
           done(error,null)
         })
   }) ; 
-  app.get("/", async (request,response) =>{
-    response.render("index.ejs",{
-      title:"Todo application",
-      csrfToken:request.csrfToken(),
-    })
+  app.get("/", async (request, response) => {
+    if (request.user) {
+      return response.redirect("/todos");
+    }
+    
+    response.render("index.ejs", {
+      title: "Todo application",
+      csrfToken: request.csrfToken(),
+    });
   });
+  
 
 
   /*app.get("/", function (request, response) {
