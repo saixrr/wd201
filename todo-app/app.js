@@ -74,36 +74,17 @@
     })
   });
 
+
+  /*app.get("/", function (request, response) {
+    console.log("Todo list ",request.body);
+  });*/
   app.get("/signup",(request,response)=>{
+    if (request.user) {
+      return response.redirect("/todos");
+    }
     response.render("signup.ejs",{title:"Signup",csrfToken: request.csrfToken() })
   })
 
-  app.get("/todos",connectEnsureLogin.ensureLoggedIn(), async (request,response) =>{
-    const loggedInUser = request.user.id;
-    const overdue = await Todo.overdue(loggedInUser);
-    const dueToday  = await Todo.dueToday(loggedInUser);
-    const dueLater = await Todo.dueLater(loggedInUser);
-    const completed = await Todo.completed(loggedInUser);
-
-    
-    if(request.accepts("html")){
-      response.render("todo.ejs",{
-        title:"Todo application",
-        overdue,
-        dueToday,
-        dueLater,
-        completed,
-        csrfToken: request.csrfToken(),
-    });
-    }else{
-      response.json({
-        overdue,
-        dueToday,
-        dueLater,
-        completed
-      })
-    }
-  });
   app.post("/users",async(request,response)=>{
   const { firstName, lastName, email, password } = request.body;
 
@@ -135,9 +116,11 @@
         response.redirect("/todos");
       })
     }catch(error) {
+      request.flash("error","Email already registered");
+      response.redirect("/signup");
       console.log(error);
     }
-  })
+  });
 
   app.get("/login",(request,response)=> {
     response.render("login.ejs",{title:"Login",csrfToken:request.csrfToken()});
@@ -162,6 +145,37 @@
       response.redirect("/");
     })
   })
+
+  app.get("/todos",connectEnsureLogin.ensureLoggedIn(), async (request,response) =>{
+    const loggedInUser = request.user.id;
+    const un=await User.findByPk(request.user.id);
+    const username=un.firstName+" "+un.lastName;
+    const overdue = await Todo.overdue(loggedInUser);
+    const dueToday  = await Todo.dueToday(loggedInUser);
+    const dueLater = await Todo.dueLater(loggedInUser);
+    const completed = await Todo.completed(loggedInUser);
+
+    
+    if(request.accepts("html")){
+      response.render("todo.ejs",{
+        title:"Todo application",
+        overdue,
+        dueToday,
+        dueLater,
+        completed,
+        username,
+        csrfToken: request.csrfToken(),
+    });
+    }else{
+      response.json({
+        overdue,
+        dueToday,
+        dueLater,
+        completed,
+        username
+      })
+    }
+  });
 
   
 
@@ -219,4 +233,4 @@
     }
   });
   
-  module.exports = app;
+  module.exports = app; 
