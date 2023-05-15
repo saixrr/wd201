@@ -193,6 +193,10 @@
     request.flash("error", "Title and due date are required");
     return response.redirect("/todos");
   }
+  if (title.length < 5) {
+    request.flash("error", "Title must be at least 5 characters long");
+    return response.redirect("/todos");
+  }
     try {
       await Todo.addTodo({
         title:request.body.title,
