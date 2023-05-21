@@ -39,21 +39,25 @@
   passport.use(new LocalStartegy({
     usernameField: 'email',
     passwordField: 'password'
-  },(username,password,done)=>{
+  }, (username, password, done) => {
     User.findOne({ where: { email: username } })
-    .then(async function (user) {
-      const result = await bcrypt.compare(password, user.password);
-      if (result) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: "Invalid password" });
-      }
-    })
-    .catch((error) => {
-      return done(err);
-    });
-  })
-  );
+      .then(async function (user) {
+        if (!user) { // Check if user is null
+          return done(null, false, { message: "Invalid email or password" });
+        }
+  
+        const result = await bcrypt.compare(password, user.password);
+        if (result) {
+          return done(null, user);
+        } else {
+          return done(null, false, { message: "Invalid password" });
+        }
+      })
+      .catch((err) => {
+        return done(err);
+      });
+  }));
+  
   passport.serializeUser((user,done)=>{
     console.log("serializing user in session",user.id)
     done(null,user.id)
@@ -137,11 +141,16 @@
         failureRedirect: "/login",
         failureFlash: true,
       }),
+      function (request, response, next) {
+        request.flash("error", request.authInfo.message);
+        next();
+      },
       function (request, response) {
         console.log(request.user);
         response.redirect("/todos");
       }
     );
+    
 
 
   app.get("/signout",(request,response)=>{
