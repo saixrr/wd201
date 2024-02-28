@@ -7,8 +7,9 @@
     "start": "nodemon -e js,ejs",
     "start:prod": "node index.js   ",
     "pretest": "NODE_ENV=test npx sequelize-cli db:drop && NODE_ENV=test npx sequelize-cli db:create",
-    "test": "NODE_ENV=test jest --detectOpenHandles",
-    "prepare": "cd .. && husky install todo-app/.husky"
+    "clean:start":"npm run pretest && NODE_ENV=test npm start",
+    "prepare": "cd .. && husky install todo-app/.husky",
+    "cy:test":"npx cypress run"
   },
   "lint-staged": {
     "*.js": [
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "cypress": "^13.6.4",
     "eslint": "^8.38.0",
     "husky": "^8.0.3",
     "jest": "^29.5.0",
