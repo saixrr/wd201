@@ -47,8 +47,11 @@
 #           POSTGRES_HOST: localhost
 #           # The default PostgreSQL port
 #           POSTGRES_PORT: 5432
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 77b5bc32f8ae33a34970dbbb42424f8e26f17aaf
 name: CI/CD Pipeline
 
 on:

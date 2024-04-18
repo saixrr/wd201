@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM node:18-alpine as base
 WORKDIR /app
-COPY todo-app/package.json /app
+COPY package.json /
 EXPOSE 3000
 
 
